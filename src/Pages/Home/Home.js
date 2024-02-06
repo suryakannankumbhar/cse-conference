@@ -5,7 +5,7 @@ import banner from './banner.jpg';
 export default function Home() {
     return (
         <div className='home-container'>
-            <h1 className='big-heading'>Welcome to Our XYZ Conference!</h1>
+            <h1 className='big-heading'>Welcome to XYZ Conference!</h1>
             <div className='centered-content'>
                 <img src={banner} alt='Banner' className='centered-image' />
 
