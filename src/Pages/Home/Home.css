@@ -1,0 +1,49 @@
+/* Home.css */
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 75vh; /* Set minimum height to 100% of the viewport height */
+}
+
+.big-heading {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.centered-image {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 5px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+}
+
+.paragraph {
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+@media (max-width: 768px) {
+    .centered-image {
+        width: 80%;
+    }
+    .paragraph {
+        text-align: center;
+        margin-top: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}

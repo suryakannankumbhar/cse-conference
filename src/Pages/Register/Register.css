@@ -1,0 +1,78 @@
+.register-container {
+    position: relative;
+    height: 80vh; /* Make the container fill the viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.register-form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+textarea,
+input[type='file'] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 3px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.register-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.register-button:hover {
+    background-color: #0056b3;
+}
+
+.register-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.scrollable-container {
+    max-height: 400px; /* Set the max height to whatever height you prefer */
+    overflow-y: scroll; /* Enable vertical scrolling */
+    padding-right: 10px;
+}
+
+/* Add other styles as needed */
+.scrollable-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@media screen and (max-width: 768px) {
+    .scrollable-container {
+        max-height: 300px; /* Adjust the max height for smaller screens */
+        padding: 10px;
+    }
+}
