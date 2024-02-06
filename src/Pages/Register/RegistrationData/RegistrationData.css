@@ -1,9 +1,17 @@
 .registration-container {
     margin: 20px auto;
     padding: 20px;
-    max-width: 90%;
+    max-width: 800px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+}
+
+.login-container {
+    text-align: center;
+}
+
+.login-title {
+    margin-bottom: 20px;
 }
 
 .registration-title {
@@ -47,20 +55,4 @@
 .registration-table .authors li {
     list-style: none;
     margin-bottom: 5px;
-}
-
-/* Media query for responsiveness */
-@media only screen and (max-width: 600px) {
-    .registration-container {
-        padding: 10px;
-    }
-
-    .registration-title {
-        font-size: 20px;
-    }
-
-    .registration-table th,
-    .registration-table td {
-        padding: 6px;
-    }
 }
