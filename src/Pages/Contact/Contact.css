@@ -18,3 +18,15 @@
 .contact-details {
     text-align: center;
 }
+
+/* Media query for smaller screens */
+@media screen and (max-width: 600px) {
+    .contact-container {
+        height: auto; /* Set height to auto for smaller screens */
+        width: 90%; /* Adjust width as needed */
+        max-width: 100%; /* Reset max-width to ensure full width */
+        transform: none; /* Remove transform for smaller screens */
+        position: static; /* Reset position to normal flow */
+        margin-top: 10%;
+    }
+}
