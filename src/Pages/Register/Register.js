@@ -1,114 +1,212 @@
 import React, { useState } from 'react';
+import { pdfDB, txtDB } from './conferenceConfig';
+import { v4 } from 'uuid';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { addDoc, collection } from 'firebase/firestore';
 import './Register.css';
 
-export default function Register() {
-    const [formData, setFormData] = useState({
-        paperName: '',
-        description: '',
-        pdfFile: null,
-        email: '',
-        phoneNumber: '',
-        authors: ['', '', '', ''],
-    });
+function Register() {
+    const [paperTitle, setPaperTitle] = useState('');
+    const [paperAbstract, setPaperAbstract] = useState('');
+    const [paperPDF, setPaperPDF] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [authors, setAuthors] = useState([]);
 
-    const handleChange = e => {
-        const { name, value, files } = e.target;
-        if (name === 'pdfFile') {
-            setFormData({ ...formData, [name]: files[0] });
-        } else {
-            setFormData({ ...formData, [name]: value });
-        }
+    const handleUpload = e => {
+        console.log(e.target.files[0]);
+        const pdfs = ref(pdfDB, `PDF/${v4()}`);
+        uploadBytes(pdfs, e.target.files[0]).then(data => {
+            console.log(data, 'pdfs');
+            getDownloadURL(data.ref).then(val => {
+                setPaperPDF(val);
+                console.log(val);
+            });
+        });
     };
 
-    const handleSubmit = e => {
-        e.preventDefault();
-        // Add your registration logic here, e.g., send the form data to the server
-        console.log('Form submitted:', formData);
+    const handleClick = async () => {
+        if (
+            !paperTitle ||
+            !paperAbstract ||
+            !paperPDF ||
+            !email ||
+            !phoneNumber ||
+            !authors[0]?.name ||
+            !authors[0]?.designation ||
+            !authors[0]?.university ||
+            !authors[0]?.email ||
+            !authors[0]?.mobileNumber
+        ) {
+            alert('Please fill in all compulsory fields.');
+            return;
+        }
+
+        const valRef = collection(txtDB, 'ConferenceData');
+        await addDoc(valRef, {
+            paperTitle: paperTitle,
+            paperAbstract: paperAbstract,
+            pdfURL: paperPDF,
+            email: email,
+            phoneNumber: phoneNumber,
+            authors: authors,
+        });
+
+        // Display alert
+        alert('Paper Has Been Successfully Submitted!');
+
+        // Clear all fields
+        setPaperTitle('');
+        setPaperAbstract('');
+        setPaperPDF('');
+        setEmail('');
+        setPhoneNumber('');
+        setAuthors([]);
+    };
+
+    const handleAuthorChange = (index, field, value) => {
+        const updatedAuthors = [...authors];
+        updatedAuthors[index][field] = value;
+        setAuthors(updatedAuthors);
+    };
+
+    const handleAddAuthor = () => {
+        setAuthors([
+            ...authors,
+            {
+                name: '',
+                designation: '',
+                university: '',
+                email: '',
+                mobileNumber: '',
+            },
+        ]);
     };
 
     return (
         <div className='register-container'>
-            <h2>Register</h2>
-            <div className='scrollable-container'>
-                <form onSubmit={handleSubmit} className='register-form'>
-                    <label>
-                        Name of Paper:
-                        <input
-                            type='text'
-                            name='paperName'
-                            value={formData.paperName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Description:
-                        <textarea
-                            name='description'
-                            value={formData.description}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        PDF Upload:
-                        <input
-                            type='file'
-                            name='pdfFile'
-                            accept='.pdf'
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Email ID:
-                        <input
-                            type='email'
-                            name='email'
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Phone Number:
-                        <input
-                            type='tel'
-                            name='phoneNumber'
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <br />
-                    {[1, 2, 3, 4].map(index => (
-                        <label key={index}>
-                            Author {index}:
+            <div className='scrollable-form'>
+                <div className='form'>
+                    <input
+                        type='text'
+                        placeholder='Title of Paper'
+                        value={paperTitle}
+                        onChange={e => {
+                            setPaperTitle(e.target.value);
+                        }}
+                        required
+                    />
+                    <input
+                        type='text'
+                        placeholder='Abstract of Paper'
+                        value={paperAbstract}
+                        onChange={e => {
+                            setPaperAbstract(e.target.value);
+                        }}
+                        required
+                    />
+                    <input
+                        type='file'
+                        name='pdfFile'
+                        accept='.pdf'
+                        onChange={e => handleUpload(e)}
+                        required
+                    />
+                    <input
+                        type='email'
+                        placeholder='Email'
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                    <input
+                        type='tel'
+                        placeholder='Phone Number'
+                        value={phoneNumber}
+                        onChange={e => setPhoneNumber(e.target.value)}
+                        required
+                    />
+                    {authors.map((author, index) => (
+                        <div key={index}>
                             <input
                                 type='text'
-                                name={`author${index}`}
-                                value={formData.authors[index - 1]}
-                                onChange={e => {
-                                    const newAuthors = [...formData.authors];
-                                    newAuthors[index - 1] = e.target.value;
-                                    setFormData({
-                                        ...formData,
-                                        authors: newAuthors,
-                                    });
-                                }}
+                                placeholder={`Author ${index + 1} Name`}
+                                value={author.name}
+                                onChange={e =>
+                                    handleAuthorChange(
+                                        index,
+                                        'name',
+                                        e.target.value
+                                    )
+                                }
+                                required
                             />
-                        </label>
+                            <input
+                                type='text'
+                                placeholder={`Author ${index + 1} Designation`}
+                                value={author.designation}
+                                onChange={e =>
+                                    handleAuthorChange(
+                                        index,
+                                        'designation',
+                                        e.target.value
+                                    )
+                                }
+                                required
+                            />
+                            <input
+                                type='text'
+                                placeholder={`Author ${index + 1} University`}
+                                value={author.university}
+                                onChange={e =>
+                                    handleAuthorChange(
+                                        index,
+                                        'university',
+                                        e.target.value
+                                    )
+                                }
+                                required
+                            />
+                            <input
+                                type='email'
+                                placeholder={`Author ${index + 1} Email`}
+                                value={author.email}
+                                onChange={e =>
+                                    handleAuthorChange(
+                                        index,
+                                        'email',
+                                        e.target.value
+                                    )
+                                }
+                                required
+                            />
+                            <input
+                                type='tel'
+                                placeholder={`Author ${
+                                    index + 1
+                                } Mobile Number`}
+                                value={author.mobileNumber}
+                                onChange={e =>
+                                    handleAuthorChange(
+                                        index,
+                                        'mobileNumber',
+                                        e.target.value
+                                    )
+                                }
+                                required
+                            />
+                        </div>
                     ))}
-                    <br />
-                    <button type='submit' className='register-button'>
-                        Register
+                    <button className='add-button' onClick={handleAddAuthor}>
+                        Add Author
                     </button>
-                </form>
+                    <button className='add-button' onClick={handleClick}>
+                        Add
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
+
+export default Register;

@@ -6,7 +6,6 @@ import Card from './Card/Card';
 //image imports
 import trusteeImage from './images/trustee.jpg';
 import ceoImage from './images/ceo.jpg';
-import principalImage from './images/principal.jpg';
 
 // speaker data
 const data = [
